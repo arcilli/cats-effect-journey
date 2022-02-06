@@ -110,7 +110,7 @@ object ContextualAbstractionScala3 {
   def main(array: Array[String]): Unit = {
     print(TypeClassScala3.convertList2Json(List(TypeClassScala3.Person("Alice", 23), TypeClassScala3.Person("Bob", 46))))
 
-    val bob = TypeClassScala3.Person("Boob", 49 )
+    val bob = TypeClassScala3.Person("Boob", 49)
     println(bob.toJson)
   }
 
