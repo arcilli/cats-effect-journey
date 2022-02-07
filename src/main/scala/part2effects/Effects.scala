@@ -2,6 +2,7 @@ package org.arrnaux
 package part2effects
 
 import scala.concurrent.Future
+import scala.io.StdIn
 
 object Effects {
   // pure functional programming
@@ -84,9 +85,71 @@ object Effects {
 
   val anOption: Option[Int] = Option(42)
 
+  /**
+   * Exercises
+   * 1. An IO which returns the current time of the system
+   * 2. An IO which measures the duration of a computation (hint: use ex.1)
+   * 3. An IO which prints something to the console
+   * 4. An IO which reads a line (a string) from std input.
+   */
+
+  // 1.
+  val clock: MyIO[Long] = MyIO(() => System.currentTimeMillis())
+
+  // 2.
+  def measure[A](computation: MyIO[A]): MyIO[Long] = {
+    for {
+      startTime <- clock
+      _ <- computation
+      endTime <- clock
+    } yield endTime - startTime
+  }
+  /*
+    clock.flatMap(startTime => computation.flatMap(_ => computation.map(finishTime => finishTime - startTime))
+
+    computation.map(finishTime => finishTime - startTime) = MyIO( () =>
+      computation.unsafeRun() - startTime = System.currentTimesMilis - startTime
+
+  =>
+    clock.flatMap(startTime => computation.flatMap(_ => MyIO( () => System.currentTimeMilis() - startTime)
+
+    computation.flatMap(lambda) = MyIO ( () => lambda(computation).unsafeRun())
+                                = MyIO ( () => MyIO( () => System.currentTimeMilis() - startTime)).unsafeRun())
+                                = MyIO ( () => System.currentTimeMilis_after_computation() - startTime)
+
+
+    => computation.flatMap(startTime => MyIO( () => System.currentTimeMilis_after_computation() - startTime))
+  = MyIO( () => lambda(computation.unsafeRun)).unsafeRun())
+  = MyIO(() => lambda(System.currentTimeMilis_after_computation - System.currentTimeMilis()).unsafeRun())
+  = MyIO(() => System.currentTimeMilis_after_computation() - System.currentTimeMilis_at_start())
+  */
+
+  def testTimeIO(): Unit = {
+    val test = measure(MyIO(() => Thread.sleep(1000)))
+    println(test.unsafeRun)
+  }
+
+  // 3.
+  def putStrLn(line: String): MyIO[Unit] = MyIO(() => println(line))
+
+  // 4.
+  val read: MyIO[String] = MyIO(() => StdIn.readLine())
+
+
+  def testConsole(): Unit = {
+    val program: MyIO[Unit] = for {
+      line1 <- read
+      line2 <- read
+      _ <- putStrLn(line1 + line2)
+    } yield ()
+    program.unsafeRun()
+  }
+
 
   def main(args: Array[String]): Unit = {
-    anIO.unsafeRun()
+    //    anIO.unsafeRun()
+    //    testTimeIO()
+    testConsole()
   }
 
 }
