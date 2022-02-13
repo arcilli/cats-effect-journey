@@ -1,3 +1,4 @@
+/*
 package org.arrnaux
 package part1recap
 
@@ -100,17 +101,18 @@ object CatsTypeClasses {
       def raiseError[A](e: E): F[A]
     }
 
-    import cats.ApplicativeError
-    type ErrorOr[A] = Either[String, A]
-    val applicativeErrorEither = ApplicativeError[ErrorOr, String]
-    val desirableValue: ErrorOr[Int] = applicativeErrorEither.pure(42)
-    val failedValue: ErrorOr[Int] = applicativeErrorEither.raiseError("Something failed")
+//    import cats.ApplicativeError
+  //    type ErrorOr[A] = Either[String, A]
+  //    val applicativeErrorEither = ApplicativeError[ErrorOr, String]
+//    val desirableValue: ErrorOr[Int] = applicativeErrorEither.pure(42)
+//    val failedValue: ErrorOr[Int] = applicativeErrorEither.raiseError("Something failed")
 
-    import cats.syntax.applicativeError.* // raiseError extension method
-    val failedValue_v2: ErrorOr[Int] = "Something failed".raiseError[ErrorOr, Int]
+//    import cats.syntax.applicativeError.* // raiseError extension method
+//    val failedValue_v2: ErrorOr[Int] = "Something failed".raiseError[ErrorOr, Int]
   // undesirable value VS desirable value
 
   def main(args: Array[String]): Unit = {
 
   }
 }
+*/
