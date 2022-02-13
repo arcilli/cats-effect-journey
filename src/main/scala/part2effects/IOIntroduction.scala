@@ -127,9 +127,10 @@ object IOIntroduction {
   def fibonacci(n: Int): IO[BigInt] =
     if (n < 2) IO(1)
     else for {
-//      last <- IO(fibonacci(n - 1)) // IO[IO[BigInt]]
-      last <- IO(fibonacci((n-1))).flatMap(x => x)
-      prev <- IO(fibonacci(n - 2)).flatMap(x => x)
+      //      last <- IO(fibonacci(n - 1)) // IO[IO[BigInt]]
+      last <- IO.defer(fibonacci((n - 1))) // Why do I need another wrapping of function call?
+      // IO.defer is the same as IO.delay(...).flatten, .flatten is the same as .flatMap(x => x)
+      prev <- IO.defer(fibonacci(n - 2))
     } yield last + prev
 
   def main(args: Array[String]): Unit = {
